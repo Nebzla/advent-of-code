@@ -54,6 +54,27 @@ namespace _2024.src.utils
             };
         }
 
+        public static (long time, T result) Benchmark<T>(Func<T> func, TimeUnit unit = TimeUnit.Ticks, int iterations = 1)
+        {
+            Stopwatch stopwatch = new();
+            stopwatch.Start();
+
+            T result = default!;
+
+            for (int i = 0; i < iterations; ++i) result = func();
+
+            long ticks = stopwatch.ElapsedTicks / iterations;
+
+            long time = unit switch
+            {
+                TimeUnit.Microseconds => ticks / 10,
+                TimeUnit.Milliseconds => ticks / 10000,
+                TimeUnit.Nanoseconds => ticks * 100,
+                _ => ticks,
+            };
+
+            return (time, result);
+        }
     };
 
 
@@ -104,21 +125,19 @@ namespace _2024.src.utils
 
         public static List<T> BreadthFirstSearch<T>(Dictionary<T, T[]> graph, T root) where T : notnull 
         {
-            List<T> visitedNodes = [];
-            HashSet<T> visitedNodesHash = []; //Hash set used for extra efficiency in contains checking
+            List<T> visitedNodes = new(graph.Count);
+            HashSet<T> visitedNodesHash = new(graph.Count); //Hash set used for extra efficiency in contains checking
             Queue<T> queue = [];
             queue.Enqueue(root);
 
             while(queue.Count > 0)
             {
                 T visited = queue.Dequeue();
-                if(visitedNodesHash.Contains(visited)) continue;
-
-                visitedNodes.Add(visited);
+                if(!visitedNodesHash.Add(visited)) continue;
                 visitedNodesHash.Add(visited);
                 
                 if(!graph.TryGetValue(visited, out var children)) continue;
-                foreach(T child in children) queue.Enqueue(child);
+                foreach(T child in children.AsSpan()) queue.Enqueue(child);
             }
 
             return visitedNodes;
@@ -126,21 +145,19 @@ namespace _2024.src.utils
 
         public static List<T> DepthFirstSearch<T>(Dictionary<T, T[]> graph, T root) where T : notnull 
         {
-            List<T> visitedNodes = [];
-            HashSet<T> visitedNodesHash = []; //Hash set used for extra efficiency in contains checking
+            List<T> visitedNodes = new(graph.Count);
+            HashSet<T> visitedNodesHash = new(graph.Count); //Hash set used for extra efficiency in contains checking
             Stack<T> stack = [];
             stack.Push(root);
 
              while(stack.Count > 0)
             {
                 T visited = stack.Pop();
-                if(visitedNodesHash.Contains(visited)) continue;
-
+                if(!visitedNodesHash.Add(visited)) continue;
                 visitedNodes.Add(visited);
-                visitedNodesHash.Add(visited);
 
                 if(!graph.TryGetValue(visited, out var children)) continue;
-                foreach(T child in children) stack.Push(child);
+                foreach(T child in children.AsSpan()) stack.Push(child);
             }
 
             return visitedNodes;

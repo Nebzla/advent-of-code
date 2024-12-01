@@ -1,14 +1,18 @@
+using _2024.src.Interfaces;
 using _2024.src.utils;
 
 namespace _2024.src
 {
-    public static class Day1
+    public class Day1 : ISolution
     {
-        static readonly string[] input = ParsingUtils.GetInput(1);
-        static readonly List<int> leftList = [];
-        static readonly List<int> rightList = [];
+        public static ushort DayNumber => 1;
 
-        private static void PopulateLists()
+
+        string[] input = ParsingUtils.GetInput(1);
+        readonly List<int> leftList = [];
+        readonly List<int> rightList = [];
+
+        private void PopulateLists()
         {
             foreach(string line in input)
             {
@@ -21,7 +25,7 @@ namespace _2024.src
             rightList.Sort();
         }
 
-        private static long SumLists()
+        private long SumLists()
         {
             long total = 0;
             for(int i = 0; i < leftList.Count; ++i)
@@ -32,7 +36,7 @@ namespace _2024.src
             return total;
         }
 
-        private static long GetSimilarityScore()
+        private long GetSimilarityScore()
         {
             long score = 0;
             for(int l = 0; l < leftList.Count; ++l)
@@ -49,11 +53,20 @@ namespace _2024.src
             return score;
         }
 
-        public static void Execute()
+        public void Setup(string[] input) 
         {
+            this.input = input;
             PopulateLists();
-            Console.WriteLine("Part 1: " + SumLists());
-            Console.WriteLine("Part 2: " + GetSimilarityScore());
+        }
+
+        public string ExecPartA()
+        {
+            return SumLists().ToString();
+        }
+
+        public string ExecPartB()
+        {
+            return GetSimilarityScore().ToString();
         }
     }
 }
