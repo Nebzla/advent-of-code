@@ -5,7 +5,7 @@ namespace _2024.src
 {
     public class Day1 : ISolution
     {
-        public static ushort DayNumber => 1;
+        public ushort DayNumber => 1;
 
 
         string[] input = ParsingUtils.GetInput(1);

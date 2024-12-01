@@ -24,56 +24,30 @@ namespace _2024
             Console.WriteLine("----------------------------------------------");
         }
 
-
-
         static void PrintAllSolutions()
         {
-            Console.WriteLine('\n');
-            List<Type> solutionTypes = Assembly.GetExecutingAssembly()
+            List<ISolution> solutions = Assembly.GetExecutingAssembly()
             .GetTypes()
             .Where(t => typeof(ISolution).IsAssignableFrom(t) && !t.IsInterface)
+            .Select(t => Activator.CreateInstance(t) as ISolution)
+            .OfType<ISolution>()
             .ToList();
 
-            foreach (Type type in solutionTypes)
+            foreach(ISolution instance in solutions) 
             {
-                ISolution instance = Activator.CreateInstance(type) as ISolution
-                ?? throw new InvalidOperationException($"Unable to create instance of {type.FullName}");
-
-                PropertyInfo dayProperty = type.GetProperty("DayNumber") ?? throw new NullReferenceException("DayNumber doesn't exist as property");
-
-                object dayVal = dayProperty.GetValue(null) ?? throw new NullReferenceException("DayNumber unexpectedly null");
-                if (dayVal is not ushort day) throw new InvalidCastException("DayNumber is not of expected type ushort");
-
-                Solve(day, instance);
+                Solve(instance.DayNumber, instance);
             }
-            Console.WriteLine('\n');
         }
 
-        //TODO Needs Optimisation
         static void PrintSolution(ushort day)
         {
-            Console.WriteLine('\n');
-            List<Type> solutionTypes = Assembly.GetExecutingAssembly()
+            ISolution instance = Assembly.GetExecutingAssembly()
             .GetTypes()
-            .Where(t => typeof(ISolution).IsAssignableFrom(t) && !t.IsInterface)
-            .ToList();
+            .Where(t => typeof(ISolution).IsAssignableFrom(t) && t.IsInterface)
+            .Select(t => Activator.CreateInstance(t) as ISolution)
+            .FirstOrDefault(s => s != null && s.DayNumber == day) ?? throw new ArgumentException($"Day {day} does not exist in program");
 
-            foreach (Type type in solutionTypes)
-            {
-                ISolution instance = Activator.CreateInstance(type) as ISolution
-                ?? throw new InvalidOperationException($"Unable to create instance of {type.FullName}");
-
-                PropertyInfo dayProperty = type.GetProperty("DayNumber") ?? throw new NullReferenceException("DayNumber doesn't exist as property");
-
-                object dayVal = dayProperty.GetValue(null) ?? throw new NullReferenceException("DayNumber unexpectedly null");
-                if (dayVal is not ushort dayNum) throw new InvalidCastException("DayNumber is not of expected type ushort");
-
-                if (dayNum != day) continue;
-
-                Solve(day, instance);
-                break;
-            }
-            Console.WriteLine('\n');
+            Solve(day, instance);
         }
 
         static void Main()
