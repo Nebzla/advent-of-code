@@ -11,17 +11,17 @@ namespace _2024.src
 
         public void Setup(string[] input) 
         {
-            throw new NotImplementedException();
+            return;
         }
 
-        public string ExecPartA()
+        public string? ExecPartA()
         {
-            throw new NotImplementedException();
+            return null;
         }
 
-        public string ExecPartB()
+        public string? ExecPartB()
         {
-            throw new NotImplementedException();
+            return null;
         }
 
     }
