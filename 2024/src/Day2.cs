@@ -6,23 +6,146 @@ namespace _2024.src
     public class Day2 : ISolution
     {
         public ushort DayNumber => 2;
+        List<int>[] nums = [];
 
-
-
-        public void Setup(string[] input) 
+        private static bool CheckValid(List<int> row)
         {
-            return;
+            if(row.Count == 0) return false;
+            if(row.Count < 2) return true; // If row only has two elements it can always be fixed by removing one
+
+            int? previousDifference = null;
+
+            for(int i = 0; i < row.Count - 1; ++i)
+            {
+                int difference = row[i + 1] - row[i];
+                if(difference == 0) return false; // If no change then invalid
+
+                if(!GeneralUtils.HasSameSign(difference, previousDifference ?? 0)) return false; // If difference has changed from +ve to -ve then invalid
+                if(Math.Abs(difference) > 3) return false; // If |difference| is more than 3 then invalid
+
+                previousDifference = difference;
+            }
+
+            return true;
         }
 
-        public string? ExecPartA()
+        //!Non functional non-brute force approach
+        private static bool CheckFullValidity(List<int> initialRow)
         {
-            return null;
+            if(initialRow.Count == 0) return false;
+            if(initialRow.Count < 3) return true; // If row only has two elements it can always be fixed by removing one
+
+            int? previousDifference = null;
+            bool hasFixed = false; // If requires fixing twice, then still invalid
+
+            List<int> row = new(initialRow);
+
+            for(int i = 0; i < row.Count - 1; ++i)
+            {
+                int difference = row[i + 1] - row[i];
+
+                if(difference == 0) // If difference is zero, can remove first one then check same index again due to shortened list
+                {
+                    if(hasFixed) return false; // If problem already occured, cannot again
+                    if(i == row.Count - 2) return true; // If now at end, there can be no more mistakes
+
+                    row.RemoveAt(i + 1);
+                    
+                    --i; // Decrement to check same spot again
+                    hasFixed = true;
+                    continue;
+                }
+
+                if(Math.Abs(difference) > 3)
+                {
+                    if(hasFixed) return false; // If problem already occured, cannot again
+                    if(i == row.Count - 2) return true; // If now at end, there can be no more mistakes
+
+                    if(i == 0) row.RemoveAt(0); // If at the start, can potentially save what would otherwise be invalid by deleting first instead
+                    else row.RemoveAt(i + 1);
+                    
+                    --i; // Decrement to check same spot again
+                    hasFixed = true;
+                    continue;
+                }
+
+                if(!GeneralUtils.HasSameSign(difference, previousDifference ?? 0))
+                {
+                    if(hasFixed) return false; // If problem already occured, cannot again
+                    if(i == row.Count - 2) return true; // If now at end, there can be no more mistakes
+
+                    if(i == 1) // In this case it is possible to fix by removing the first element, rather than the usual i + 1
+                    {
+                        // If the order continuing past problem is the same as original, then the usual culprit can be removed, otherwise can remove zero
+                        if(!GeneralUtils.HasSameSign(row[i + 2] - row[i + 1], previousDifference ?? throw new NullReferenceException()))
+                        {
+                            row.RemoveAt(0);
+                            --i;
+                            hasFixed = true;
+                            previousDifference = -previousDifference;
+                            continue;
+                        }
+                    }
+
+                    row.RemoveAt(i + 1);
+                    
+                    --i; // Decrement to check same spot again
+                    hasFixed = true;
+                    continue;
+                }
+
+
+                
+                previousDifference = difference;
+            }
+
+            return true;
+        }
+
+        private static bool BruteForceValidate(List<int> row)
+        {
+            for(int i = 0; i < row.Count; ++i)
+            {
+                List<int> rowCopy = new(row);
+                rowCopy.RemoveAt(i);
+                if(CheckValid(rowCopy)) return true;
+            }
+
+            return false;
+        }
+
+
+        public string ExecPartA()
+        {
+            int total = 0;
+            foreach(List<int> row in nums)
+            {
+                if(CheckValid(row)) ++total;
+            }
+
+            return total.ToString();
         }
 
         public string? ExecPartB()
         {
-            return null;
+            int total = 0;
+            foreach(List<int> row in nums)
+            {
+                if(BruteForceValidate(row)) ++total;
+            }
+
+            return total.ToString();
         }
+
+
+
+        public void Setup(string[] input) 
+        {   
+            nums = ParsingUtils.ParseDigitsList(input);
+        }
+
+
 
     }
 }
+

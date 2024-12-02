@@ -13,5 +13,10 @@ namespace _2024.src.utils
         {
             Console.WriteLine(string.Join(", ", list));
         }
+
+        public static bool HasSameSign(int x, int y)
+        {
+            return (x >= 0 && y >= 0) || (x <= 0 && y <= 0);
+        }
     }
 }

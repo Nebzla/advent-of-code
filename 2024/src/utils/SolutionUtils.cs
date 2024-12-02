@@ -43,7 +43,7 @@ namespace _2024.src.utils
             if (day < 1 || day > 25) throw new ArgumentException("Invalid day entered");
             ISolution instance = Assembly.GetExecutingAssembly()
             .GetTypes()
-            .Where(t => typeof(ISolution).IsAssignableFrom(t) && t.IsInterface)
+            .Where(t => typeof(ISolution).IsAssignableFrom(t) && !t.IsInterface)
             .Select(t => Activator.CreateInstance(t) as ISolution)
             .FirstOrDefault(s => s != null && s.DayNumber == day) ?? throw new ArgumentException($"Day {day} does not exist in program");
 
