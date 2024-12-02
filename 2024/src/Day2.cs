@@ -29,7 +29,7 @@ namespace _2024.src
             return true;
         }
 
-        //!Non functional non-brute force approach
+        //!Non functional non-brute force approach, test data gives an answer that is 2 off from correct
         private static bool CheckFullValidity(List<int> initialRow)
         {
             if(initialRow.Count == 0) return false;
@@ -38,7 +38,7 @@ namespace _2024.src
             int? previousDifference = null;
             bool hasFixed = false; // If requires fixing twice, then still invalid
 
-            List<int> row = new(initialRow);
+            List<int> row = [.. initialRow];
 
             for(int i = 0; i < row.Count - 1; ++i)
             {
@@ -56,47 +56,60 @@ namespace _2024.src
                     continue;
                 }
 
-                if(Math.Abs(difference) > 3)
+                if(!GeneralUtils.HasSameSign(difference, previousDifference ?? 0)) // Direction of sequence cannot change
                 {
                     if(hasFixed) return false; // If problem already occured, cannot again
                     if(i == row.Count - 2) return true; // If now at end, there can be no more mistakes
 
-                    if(i == 0) row.RemoveAt(0); // If at the start, can potentially save what would otherwise be invalid by deleting first instead
-                    else row.RemoveAt(i + 1);
-                    
-                    --i; // Decrement to check same spot again
-                    hasFixed = true;
-                    continue;
-                }
-
-                if(!GeneralUtils.HasSameSign(difference, previousDifference ?? 0))
-                {
-                    if(hasFixed) return false; // If problem already occured, cannot again
-                    if(i == row.Count - 2) return true; // If now at end, there can be no more mistakes
-
-                    if(i == 1) // In this case it is possible to fix by removing the first element, rather than the usual i + 1
+                    // If later value is the same must remove this  one instead
+                    if(i + 1 < row.Count && row[i + 2] == row[i]) row.RemoveAt(i);
+                    else if(i == 1) // In this case it is possible to fix by removing the first element, rather than the usual i + 1
                     {
                         // If the order continuing past problem is the same as original, then the usual culprit can be removed, otherwise can remove zero
                         if(!GeneralUtils.HasSameSign(row[i + 2] - row[i + 1], previousDifference ?? throw new NullReferenceException()))
                         {
+                            
                             row.RemoveAt(0);
-                            --i;
-                            hasFixed = true;
                             previousDifference = -previousDifference;
-                            continue;
                         }
-                    }
 
-                    row.RemoveAt(i + 1);
+                        row.RemoveAt(i + 1);
+                    } else row.RemoveAt(i + 1);
                     
                     --i; // Decrement to check same spot again
                     hasFixed = true;
                     continue;
                 }
 
+                if(Math.Abs(difference) > 3) // Difference cannot be greater than 3
+                {
+                    if(hasFixed) return false; // If problem already occured, cannot again
+                    if(i == row.Count - 2) return true; // If now at end, there can be no more mistakes
 
-                
+
+                    if(i == 0 && row.Count > 3)
+                    {
+                        int finalDirection = row[3] - row[2];
+                        if(finalDirection == 0) return false;
+                        
+                        if(finalDirection > 0) // Ascending
+                        {
+                            if(row[2] > row[1]) row.RemoveAt(0);
+                            else row.RemoveAt(1);
+                        } else
+                        {
+                            if(row[2] > row[1]) row.RemoveAt(1);
+                            else row.RemoveAt(0); 
+                        }
+                    } else row.RemoveAt(i + 1);
+                    
+
+                    --i; // Decrement to check same spot again
+                    hasFixed = true;
+                    continue;
+                }
                 previousDifference = difference;
+
             }
 
             return true;
@@ -106,7 +119,7 @@ namespace _2024.src
         {
             for(int i = 0; i < row.Count; ++i)
             {
-                List<int> rowCopy = new(row);
+                List<int> rowCopy = [.. row];
                 rowCopy.RemoveAt(i);
                 if(CheckValid(rowCopy)) return true;
             }
@@ -126,12 +139,27 @@ namespace _2024.src
             return total.ToString();
         }
 
-        public string? ExecPartB()
+        public string ExecPartB()
         {
+            HashSet<List<int>> hash = [];
+
             int total = 0;
+
             foreach(List<int> row in nums)
             {
-                if(BruteForceValidate(row)) ++total;
+                if(BruteForceValidate(row))
+                {
+                    hash.Add(row);
+                } 
+            }
+
+            foreach(List<int> row in nums)
+            {
+                if(CheckFullValidity(row))
+                {
+                    ++total;
+                    if(!hash.Contains(row)) GeneralUtils.PrintCSV(row);
+                } 
             }
 
             return total.ToString();
