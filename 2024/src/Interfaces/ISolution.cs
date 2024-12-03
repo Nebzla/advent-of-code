@@ -6,6 +6,6 @@ namespace _2024.src.Interfaces
 
         public string? ExecPartA();
         public string? ExecPartB();
-        public void Setup(string[] input);
+        public void Setup(string[] input, string continuousInput);
     }
 }

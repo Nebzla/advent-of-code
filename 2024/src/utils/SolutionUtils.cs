@@ -8,10 +8,11 @@ namespace _2024.src.utils
         private static void Solve(ushort day, ISolution instance)
         {
             string[] input = ParsingUtils.GetInput(day);
+            string continuousInput = ParsingUtils.GetContinuousInput(day);
 
             Console.WriteLine($"Executing Day {day} Parts");
             Console.WriteLine("----------------------------------------------");
-            long setupTime = DiagnosticUtils.Benchmark(() => instance.Setup(input), DiagnosticUtils.TimeUnit.Milliseconds);
+            long setupTime = DiagnosticUtils.Benchmark(() => instance.Setup(input, continuousInput), DiagnosticUtils.TimeUnit.Milliseconds);
             Console.WriteLine($"Setup Time: {setupTime}ms");
 
             (long timeA, string? resultA) = DiagnosticUtils.Benchmark(instance.ExecPartA, DiagnosticUtils.TimeUnit.Milliseconds);

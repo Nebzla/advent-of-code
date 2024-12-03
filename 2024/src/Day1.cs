@@ -53,7 +53,7 @@ namespace _2024.src
             return score;
         }
 
-        public void Setup(string[] input) 
+        public void Setup(string[] input, string continuousInput) 
         {
             this.input = input;
             PopulateLists();

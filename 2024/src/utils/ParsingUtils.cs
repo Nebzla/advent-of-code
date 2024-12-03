@@ -3,12 +3,19 @@ namespace _2024.src.utils
 {
     public static partial class ParsingUtils
     {
-        private readonly static string inputDirectory = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "src", "inputs"));
+        private readonly static string inputDirectory = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "src", "inputs"));
         public static string[] GetInput(int day)
         {
             if (day < 1 || day > 25) throw new ArgumentException("Invalid day entered");
             return File.ReadAllLines(Path.Combine(inputDirectory, day + ".txt"));
         }
+
+        public static string GetContinuousInput(int day)
+        {
+            if (day < 1 || day > 25) throw new ArgumentException("Invalid day entered");
+            return File.ReadAllText(Path.Combine(inputDirectory, day + ".txt"));
+        }
+
 
         public static int[][] ParseDigits(string[] rows)
         {
@@ -35,6 +42,13 @@ namespace _2024.src.utils
 
             return [.. parsedRows];
         }
+
+        public static IEnumerable<int> ParseDigitsList(string row)
+        {
+            Regex pattern = DigitsRegex();
+            return pattern.Matches(row).Select(d => int.Parse(d.Value)).ToList();
+        }
+
 
         [GeneratedRegex(@"(\d)+")]
         private static partial Regex DigitsRegex();
