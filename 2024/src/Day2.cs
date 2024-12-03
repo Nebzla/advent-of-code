@@ -141,25 +141,11 @@ namespace _2024.src
 
         public string ExecPartB()
         {
-            HashSet<List<int>> hash = [];
-
             int total = 0;
 
             foreach(List<int> row in nums)
             {
-                if(BruteForceValidate(row))
-                {
-                    hash.Add(row);
-                } 
-            }
-
-            foreach(List<int> row in nums)
-            {
-                if(CheckFullValidity(row))
-                {
-                    ++total;
-                    if(!hash.Contains(row)) GeneralUtils.PrintCSV(row);
-                } 
+                if(BruteForceValidate(row)) ++total;
             }
 
             return total.ToString();

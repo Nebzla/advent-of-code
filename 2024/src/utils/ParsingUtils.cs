@@ -3,15 +3,16 @@ namespace _2024.src.utils
 {
     public static partial class ParsingUtils
     {
+        private readonly static string inputDirectory = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "src", "inputs"));
         public static string[] GetInput(int day)
         {
             if (day < 1 || day > 25) throw new ArgumentException("Invalid day entered");
-            return File.ReadAllLines($"D:/Programming/advent-of-code/2024/src/inputs/{day}.txt");
+            return File.ReadAllLines(Path.Combine(inputDirectory, day + ".txt"));
         }
 
         public static int[][] ParseDigits(string[] rows)
         {
-            Regex pattern = MyRegex();
+            Regex pattern = DigitsRegex();
             List<int[]> parsedRows = [];
             foreach(string row in rows)
             {
@@ -24,7 +25,7 @@ namespace _2024.src.utils
 
         public static List<int>[] ParseDigitsList(string[] rows)
         {
-            Regex pattern = MyRegex();
+            Regex pattern = DigitsRegex();
             List<List<int>> parsedRows = [];
             foreach(string row in rows)
             {
@@ -36,7 +37,7 @@ namespace _2024.src.utils
         }
 
         [GeneratedRegex(@"(\d)+")]
-        private static partial Regex MyRegex();
+        private static partial Regex DigitsRegex();
     }
 }
 
