@@ -59,12 +59,12 @@ namespace _2024.src
             PopulateLists();
         }
 
-        public string ExecPartA()
+        public string? ExecPartA()
         {
             return SumLists().ToString();
         }
 
-        public string ExecPartB()
+        public string? ExecPartB()
         {
             return GetSimilarityScore().ToString();
         }

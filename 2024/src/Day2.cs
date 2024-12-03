@@ -42,7 +42,7 @@ namespace _2024.src
         }
 
 
-        public string ExecPartA()
+        public string? ExecPartA()
         {
             int total = 0;
             foreach(List<int> row in nums)
@@ -53,7 +53,7 @@ namespace _2024.src
             return total.ToString();
         }
 
-        public string ExecPartB()
+        public string? ExecPartB()
         {
             int total = 0;
 

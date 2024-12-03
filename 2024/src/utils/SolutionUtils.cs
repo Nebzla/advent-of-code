@@ -12,15 +12,15 @@ namespace _2024.src.utils
 
             Console.WriteLine($"Executing Day {day} Parts");
             Console.WriteLine("----------------------------------------------");
-            long setupTime = DiagnosticUtils.Benchmark(() => instance.Setup(input, continuousInput), DiagnosticUtils.TimeUnit.Milliseconds);
-            Console.WriteLine($"Setup Time: {setupTime}ms");
+            double setupTime = DiagnosticUtils.Benchmark(() => instance.Setup(input, continuousInput), DiagnosticUtils.TimeUnit.Microseconds);
+            Console.WriteLine($"Setup Time: {setupTime / 1000}ms");
 
-            (long timeA, string? resultA) = DiagnosticUtils.Benchmark(instance.ExecPartA, DiagnosticUtils.TimeUnit.Milliseconds);
-            (long timeB, string? resultB) = DiagnosticUtils.Benchmark(instance.ExecPartB, DiagnosticUtils.TimeUnit.Milliseconds);
-            if(resultA != null) Console.WriteLine($"Part A: {resultA}, Took: {timeA}ms");
-            if(resultB != null) Console.WriteLine($"Part B: {resultB}, Took: {timeB}ms");
+            (double timeA, string? resultA) = DiagnosticUtils.Benchmark(instance.ExecPartA, DiagnosticUtils.TimeUnit.Microseconds);
+            (double timeB, string? resultB) = DiagnosticUtils.Benchmark(instance.ExecPartB, DiagnosticUtils.TimeUnit.Microseconds);
+            if(resultA != null) Console.WriteLine($"Part A: {resultA}, Took: {timeA / 1000}ms");
+            if(resultB != null) Console.WriteLine($"Part B: {resultB}, Took: {timeB / 1000}ms");
 
-            Console.WriteLine($"Total Execution Time: {timeA + timeB + setupTime}ms");
+            Console.WriteLine($"Total Execution Time: {(timeA + timeB + setupTime) / 1000}ms");
             Console.WriteLine("----------------------------------------------");
         }
 
