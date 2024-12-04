@@ -17,10 +17,15 @@ namespace _2024.src.utils
 
             (double timeA, string? resultA) = DiagnosticUtils.Benchmark(instance.ExecPartA, DiagnosticUtils.TimeUnit.Microseconds);
             (double timeB, string? resultB) = DiagnosticUtils.Benchmark(instance.ExecPartB, DiagnosticUtils.TimeUnit.Microseconds);
-            if(resultA != null) Console.WriteLine($"Part A: {resultA}, Took: {timeA / 1000}ms");
-            if(resultB != null) Console.WriteLine($"Part B: {resultB}, Took: {timeB / 1000}ms");
 
-            Console.WriteLine($"Total Execution Time: {(timeA + timeB + setupTime) / 1000}ms");
+            if(resultA == null && resultB == null) Console.WriteLine("Results returned null, skipping diagnostic");
+            else
+            {
+                if(resultA != null) Console.WriteLine($"Part A: {resultA}, Took: {timeA / 1000}ms");
+                if(resultB != null) Console.WriteLine($"Part B: {resultB}, Took: {timeB / 1000}ms");
+                Console.WriteLine($"Total Execution Time: {(timeA + timeB + setupTime) / 1000}ms");
+            }
+
             Console.WriteLine("----------------------------------------------");
         }
 

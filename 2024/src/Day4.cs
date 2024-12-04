@@ -1,5 +1,4 @@
 using _2024.src.Interfaces;
-using _2024.src.utils;
 
 namespace _2024.src
 {
@@ -44,7 +43,13 @@ namespace _2024.src
 
         private bool HasCross(int x0, int y0)
         {
-            return false;
+            if(x0 - 1 < 0 || x0 + 1 >= xLen || y0 - 1 < 0 || y0 + 1 >= yLen) return false;
+            char TL = input[y0 - 1][x0 + 1];
+            char TR = input[y0 + 1][x0 + 1];
+            char BL = input[y0 - 1][x0 - 1];
+            char BR = input[y0 + 1][x0 - 1];
+
+            return ((TL == 'M' && BR == 'S') || (TL == 'S' && BR == 'M')) && ((TR == 'M' && BL == 'S') || (TR == 'S' && BL == 'M'));
         }
 
         private int GetTotalXmasStrings()
@@ -78,9 +83,6 @@ namespace _2024.src
         }
 
 
-
-
-
         public string? ExecPartA()
         {
             return GetTotalXmasStrings().ToString();
@@ -94,6 +96,7 @@ namespace _2024.src
 
         public void Setup(string[] input, string continuousInput)
         {
+            if(input.Length == 0) return;
             this.input = input;
             xLen = input[0].Length;
             yLen = input.Length;
