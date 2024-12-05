@@ -399,3 +399,5 @@ FodyWeavers.xsd
 
 # AOC Inputs
 *.txt
+*.csproj
+*.sln
