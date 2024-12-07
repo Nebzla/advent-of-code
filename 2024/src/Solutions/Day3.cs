@@ -12,7 +12,7 @@ namespace _2024.src
 
         private static int Multiply(string operation)
         {
-            int[] nums = ParsingUtils.ParseDigitsList(operation).ToArray();
+            int[] nums = ParsingUtils.ParseDigits(operation).ToArray();
             if (nums.Length != 2) throw new InvalidOperationException("Only 2 numbers should exist in each multiplication");
             return nums[0] * nums[1];
         }

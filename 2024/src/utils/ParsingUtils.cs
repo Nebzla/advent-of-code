@@ -43,10 +43,10 @@ namespace _2024.src.utils
             return [.. parsedRows];
         }
 
-        public static IEnumerable<int> ParseDigitsList(string row)
+        public static IEnumerable<int> ParseDigits(string row)
         {
             Regex pattern = DigitsRegex();
-            return pattern.Matches(row).Select(d => int.Parse(d.Value)).ToList();
+            return pattern.Matches(row).Select(d => int.Parse(d.Value));
         }
 
 

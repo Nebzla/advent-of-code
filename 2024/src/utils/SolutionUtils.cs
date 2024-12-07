@@ -55,5 +55,14 @@ namespace _2024.src.utils
 
             Solve(day, instance);
         }
+
+        
+        public static void PrintSolutions(ushort[] days)
+        {
+            foreach(ushort day in days)
+            {
+                PrintSolution(day);
+            }
+        }
     }
 }

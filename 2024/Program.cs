@@ -6,7 +6,7 @@ namespace _2024
     {
         static void Main()
         {
-            SolutionUtils.PrintSolution(6);
+            SolutionUtils.PrintAllSolutions();
         }
     }
 }

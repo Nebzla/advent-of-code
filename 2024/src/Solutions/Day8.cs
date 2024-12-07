@@ -3,10 +3,9 @@ using _2024.src.utils;
 
 namespace _2024.src
 {
-    public class Day7 : ISolution
+    public class Day8 : ISolution
     {
-        public ushort DayNumber => 67;
-
+        public ushort DayNumber => 8;
 
         public string? ExecPartA()
         {
@@ -22,6 +21,5 @@ namespace _2024.src
         {
             return;
         }
-
     }
 }
