@@ -7,8 +7,8 @@ namespace _2024.src
         public ushort DayNumber => 4;
 
         string[] input = [];
-        int xLen; //Horizontal
-        int yLen; //Vertical (Downwards)
+        private int xLen;
+        private int yLen;
 
         private static readonly char[] xmasString = ['X', 'M', 'A', 'S'];
         private int GetStringsAtPosition(int xO, int yO)
@@ -81,6 +81,9 @@ namespace _2024.src
             }
             return total;
         }
+
+
+
 
 
         public string? ExecPartA()

@@ -6,7 +6,8 @@ namespace _2024.src
     public class Day2 : ISolution
     {
         public ushort DayNumber => 2;
-        List<int>[] nums = [];
+        
+        private List<int>[] nums = [];
 
         private static bool CheckValid(List<int> row)
         {
@@ -42,6 +43,8 @@ namespace _2024.src
         }
 
 
+
+
         public string? ExecPartA()
         {
             int total = 0;
@@ -64,8 +67,6 @@ namespace _2024.src
 
             return total.ToString();
         }
-
-
 
         public void Setup(string[] input, string continuousInput) 
         {   

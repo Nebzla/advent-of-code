@@ -41,6 +41,8 @@ namespace _2024.src
 
 
 
+
+
         public string? ExecPartA()
         {
             long total = 0;

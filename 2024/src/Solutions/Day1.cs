@@ -6,11 +6,10 @@ namespace _2024.src
     public class Day1 : ISolution
     {
         public ushort DayNumber => 1;
-
-
-        string[] input = ParsingUtils.GetInput(1);
-        readonly List<int> leftList = [];
-        readonly List<int> rightList = [];
+        
+        private string[] input = ParsingUtils.GetInput(1);
+        private readonly List<int> leftList = [];
+        private readonly List<int> rightList = [];
 
         private void PopulateLists()
         {
@@ -53,11 +52,7 @@ namespace _2024.src
             return score;
         }
 
-        public void Setup(string[] input, string continuousInput) 
-        {
-            this.input = input;
-            PopulateLists();
-        }
+
 
         public string? ExecPartA()
         {
@@ -67,6 +62,12 @@ namespace _2024.src
         public string? ExecPartB()
         {
             return GetSimilarityScore().ToString();
+        }
+
+        public void Setup(string[] input, string continuousInput) 
+        {
+            this.input = input;
+            PopulateLists();
         }
     }
 }

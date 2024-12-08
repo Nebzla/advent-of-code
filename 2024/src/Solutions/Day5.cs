@@ -7,10 +7,10 @@ namespace _2024.src
     {
         public ushort DayNumber => 5;
 
-        readonly Dictionary<int, HashSet<int>> forwardRules = []; // A dictionary of all numbers containing rules, and all numbers that must come after them
-        readonly Dictionary<int, HashSet<int>> backwardRules = []; // A dictionary of all numbers containing rules, and all numbers that must come after them
+        private readonly Dictionary<int, HashSet<int>> forwardRules = []; // A dictionary of all numbers containing rules, and all numbers that must come after them
+        private readonly Dictionary<int, HashSet<int>> backwardRules = []; // A dictionary of all numbers containing rules, and all numbers that must come after them
 
-        List<int>[] values = [];
+        private List<int>[] values = [];
 
         private bool IsValidLine(List<int> line)
         {
@@ -110,6 +110,9 @@ namespace _2024.src
                 }
             }
         }
+
+
+
 
 
         public string? ExecPartA()

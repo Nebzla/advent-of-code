@@ -7,22 +7,24 @@ namespace _2024.src
     {
         public ushort DayNumber => 6;
 
-        private char[][] grid = [];
+        private char[,] grid = new char[0,0];
         private int xLen;
         private int yLen;
 
         private (int x, int y) GetGuardPosition()
         {
-            for (int y = 0; y < yLen; ++y)
+            for(int x = 0; x < xLen; ++x)
             {
-                int x = Array.IndexOf(grid[y], '^');
-                if (x != -1) return (x, y);
+                for (int y = 0; y < yLen; ++y)
+                {
+                    if(grid[x,y] == '^') return (x, y);
+                }
             }
 
             return (-1, -1);
         }
 
-        readonly (int xDir, int yDir)[] directions = [(0, -1), (1, 0), (0, 1), (-1, 0)];
+        private readonly (int xDir, int yDir)[] directions = [(0, -1), (1, 0), (0, 1), (-1, 0)];
         private HashSet<(int, int)> GetGuardPath(int x, int y)
         {
             int dirIndex = 0;
@@ -40,7 +42,7 @@ namespace _2024.src
                 if (newX == xLen || newX < 0 || newY == yLen || newY < 0) break;
 
 
-                if (grid[newY][newX] == '#') // If next spot is obstacle, rotate 90deg
+                if (grid[newX, newY] == '#') // If next spot is obstacle, rotate 90deg
                 {
                     ++dirIndex;
                     if (dirIndex > 3) dirIndex = 0;
@@ -54,7 +56,7 @@ namespace _2024.src
             return visited;
         }
 
-        private bool DoesPathLoop(char[][] grid, int x, int y)
+        private bool DoesPathLoop(char[,] grid, int x, int y)
         {
             HashSet<(int, int)> visited = [];
 
@@ -71,7 +73,7 @@ namespace _2024.src
 
                 if (newX == xLen || newX < 0 || newY == yLen || newY < 0) break;
 
-                if (grid[newY][newX] == '#') // If next spot is obstacle, rotate 90deg
+                if (grid[newX, newY] == '#') // If next spot is obstacle, rotate 90deg
                 {
                     ++dirIndex;
                     if (dirIndex > 3) dirIndex = 0;
@@ -93,6 +95,8 @@ namespace _2024.src
         }
 
 
+
+
         public string? ExecPartA()
         {
             (int xG, int yG) = GetGuardPosition();
@@ -108,8 +112,8 @@ namespace _2024.src
             {
                 if (x == xG && y == yG) continue;
 
-                char[][] newGrid = GeneralUtils.DeepCopy2DArray(grid);
-                newGrid[y][x] = '#';
+                char[,] newGrid = GridUtils.DeepCopyMultiDimensionalArray(grid);
+                newGrid[x, y] = '#';
                 if (DoesPathLoop(newGrid, xG, yG)) ++total;
             }
             return total.ToString();
@@ -119,9 +123,9 @@ namespace _2024.src
         {
             if (input.Length == 0 || input[0].Length == 0) return;
 
-            grid = input.Select(r => r.ToCharArray()).ToArray();
-            xLen = input[0].Length;
-            yLen = input.Length;
+            grid = GridUtils.ConvertInputToGrid(input);
+            xLen = grid.GetLength(0);
+            yLen = grid.GetLength(1);
         }
 
     }

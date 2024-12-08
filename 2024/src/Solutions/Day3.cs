@@ -7,8 +7,9 @@ namespace _2024.src
     public partial class Day3 : ISolution
     {
         public ushort DayNumber => 3;
-        List<string> multiplications = [];
-        List<string> operations = [];
+        
+        private List<string> multiplications = [];
+        private List<string> operations = [];
 
         private static int Multiply(string operation)
         {
@@ -42,6 +43,8 @@ namespace _2024.src
             
             return total;
         }
+        
+
         
         public string? ExecPartA()
         {
