@@ -1,5 +1,5 @@
 using _2024.src.Interfaces;
-using _2024.src.utils;
+using _2024.src.Utils;
 
 namespace _2024.src.Solutions
 {

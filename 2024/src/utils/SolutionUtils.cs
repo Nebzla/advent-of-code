@@ -1,7 +1,7 @@
 using System.Reflection;
 using _2024.src.Interfaces;
 
-namespace _2024.src.utils
+namespace _2024.src.Utils
 {
     public class SolutionUtils
     {

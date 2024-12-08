@@ -1,5 +1,5 @@
 using System.Text.RegularExpressions;
-namespace _2024.src.utils
+namespace _2024.src.Utils
 {
     public static partial class ParsingUtils
     {

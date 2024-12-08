@@ -1,4 +1,4 @@
-﻿using _2024.src.utils;
+﻿using _2024.src.Utils;
 
 namespace _2024
 {
@@ -6,7 +6,7 @@ namespace _2024
     {
         static void Main()
         {
-            SolutionUtils.PrintSolution(8);
+            SolutionUtils.PrintAllSolutions();
         }
     }
 }
