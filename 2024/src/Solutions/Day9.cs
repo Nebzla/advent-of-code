@@ -1,7 +1,7 @@
 using _2024.src.Interfaces;
 using _2024.src.utils;
 
-namespace _2024.src
+namespace _2024.src.Solutions
 {
     public class Day9 : ISolution
     {

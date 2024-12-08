@@ -1,6 +1,6 @@
 using _2024.src.Interfaces;
 
-namespace _2024.src
+namespace _2024.src.Solutions
 {
     public partial class Day4 : ISolution
     {

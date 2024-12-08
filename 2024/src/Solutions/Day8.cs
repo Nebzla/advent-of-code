@@ -1,7 +1,7 @@
 using _2024.src.Interfaces;
 using _2024.src.utils;
 
-namespace _2024.src
+namespace _2024.src.Solutions
 {
     public class Day8 : ISolution
     {
@@ -79,6 +79,9 @@ namespace _2024.src
         public void Setup(string[] input, string continuousInput)
         {
             grid = GridUtils.ConvertInputToGrid(input);
+            xLen = grid.GetLength(0);
+            yLen = grid.GetLength(1);
+
             for (int x = 0; x < xLen; ++x)
             {
                 for (int y = 0; y < yLen; ++y)
@@ -86,9 +89,6 @@ namespace _2024.src
                     if (grid[x, y] != '.') antennaLocations.Add((x, y));
                 }
             }
-
-            xLen = grid.GetLength(0);
-            yLen = grid.GetLength(1);
         }
     }
 }

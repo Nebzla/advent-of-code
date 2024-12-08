@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 using _2024.src.Interfaces;
 using _2024.src.utils;
 
-namespace _2024.src
+namespace _2024.src.Solutions
 {
     public partial class Day3 : ISolution
     {
@@ -45,7 +45,7 @@ namespace _2024.src
         }
         
 
-        
+
         public string? ExecPartA()
         {
             return SumMultipliedInput().ToString();
