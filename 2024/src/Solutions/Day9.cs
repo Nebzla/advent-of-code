@@ -7,151 +7,101 @@ namespace _2024.src.Solutions
     {
         public ushort DayNumber => 9;
 
-        private class Block(int id, int size, int freeSpace) : IDeepCopyable<Block>
+        private class DefragBlock(int id, int space) : IDeepCopyable<DefragBlock>
         {
-            public readonly int id = id;
-            public readonly int freeSpace = freeSpace;
-            public int size = size;
+            public int id = id; // -1 If free space
+            public int space = space;
 
-            public Block DeepCopy()
+            public DefragBlock DeepCopy()
             {
-                return new Block(id, size, freeSpace);
+                return new(id, space);
             }
         }
 
-        private class DefragBlock(int id, int space)
-        {
-            public readonly int id = id;
-            public int space = space;
-        }
+        private DefragBlock[] memory = [];
 
-        private Block[] memory = [];
+
+
+        private static int GetNewEndPtr(List<DefragBlock> list, int currentEndPtr)
+        {
+            if(list[currentEndPtr].id != -1 ) return currentEndPtr;
+            return GetNewEndPtr(list, currentEndPtr - 1);
+        }
 
 
         private DefragBlock[] DiskCompactor()
         {
-            Block[] memCopy = ArrayUtils.DeepCopyReferenceArray(memory);
+            List<DefragBlock> listMemory = [.. ArrayUtils.DeepCopyReferenceArray(memory)];
 
-            List<DefragBlock> compactedMemory = [];
-
-            int memEndPtr = memory.Length - 1;
-
-            for (int i = 0; i <= memEndPtr; ++i)
+            int endMemPtr = GetNewEndPtr(listMemory, listMemory.Count - 1);
+            for(int i = 0; i < listMemory.Count - 1; ++i)
             {
-                Block memBlock = memCopy[i];
+                if(listMemory[i].id != -1) continue; // If not free space, continue, as cannot insert anything into there
 
-                DefragBlock defragBlock = new(memBlock.id, 0);
-                for (int j = 0; j < memBlock.size; ++j) // Push current spaces in memory to defragmented memory
+                DefragBlock? newBlock = null; // Will be filled with contiguous ids
+                while(listMemory[i].space > 0) // While a free space still has space, move elements at end of memory to space
                 {
-                    ++defragBlock.space;
-                }
+                    if(i >= endMemPtr) break; // If index has passed end, unable to do anymore
+                    newBlock ??= new(listMemory[endMemPtr].id, 0);
+                    newBlock.space ++;
+                    listMemory[endMemPtr].space --;
+                    listMemory[i].space --;
 
-                if (defragBlock.space > 0) compactedMemory.Add(defragBlock); // If any was added, push to new space in defragmented memory
-
-
-                DefragBlock? movedDefragBlock = null; // When is null gets reset with new memEnd values
-                for (int j = 0; j < memBlock.freeSpace; ++j) // If there is free space, move elements from end into it
-                {
-                    if (i == memEndPtr) break; // If at end of where there is any used space, remaining free space is irrelevant as nothing can move there
-                    Block endMemBlock = memCopy[memEndPtr];
-                    movedDefragBlock ??= new(memCopy[memEndPtr].id, 0);
-
-                    if (endMemBlock.size == 0) // Should only occur at the very start of iteration if end is by default full
+                    if(listMemory[endMemPtr].space == 0) // When end block has ran out of ids to give, overwrite the free space with the block
                     {
-                        --memEndPtr;
-                        --j;
-                        continue;
-                    }
+                        listMemory.Insert(i + 1, new(-1, listMemory[i].space)); // Insert new free space after to be overwritten block
+                        listMemory[i] = newBlock;
+                        newBlock = null;
+                        ++i; // Increment to point to new free space
 
-                    movedDefragBlock.space++;
-                    --endMemBlock.size;
-
-                    if (endMemBlock.size == 0) // If no more available to move to the front, decrement to next rear memory location with free space
-                    {
-                        --memEndPtr;
-                        compactedMemory.Add(movedDefragBlock);
-                        movedDefragBlock = null;
+                        listMemory[endMemPtr + 1].id = -1; // + 1 as inserted value has bumped right array indexes up by 1
+                        endMemPtr = GetNewEndPtr(listMemory, endMemPtr);
                     }
                 }
 
-                if (movedDefragBlock != null) compactedMemory.Add(movedDefragBlock); // If not null add whatever is left over at end of remaining free space
+                // When out of free space at i, if any ids ready to move, overwrite them in previous free space slot
+                if(newBlock != null)  listMemory[i] = newBlock;
             }
 
-            return [.. compactedMemory];
+            return [.. listMemory];
         }
 
 
 
-        // convert free spaces in old memory into new 
-        private DefragBlock[] GetFreeSpaceMemory()
-        {
-            Block[] memCopy = ArrayUtils.DeepCopyReferenceArray(memory);
-            List<DefragBlock> freeSpaceMemory = [];
-
-            foreach (Block block in memCopy)
-            {
-                if (block.size > 0) freeSpaceMemory.Add(new(block.id, block.size));
-                if (block.freeSpace > 0) freeSpaceMemory.Add(new(-1, block.freeSpace));
-            }
-
-            return [.. freeSpaceMemory];
-        }
-
-
-        // needs to utilise Defrag block to assign similar to last function but instead use defrag block for free spaces
         private DefragBlock[] WholeFileDiskCompactor()
         {
-            List<DefragBlock> freeSpaceMemory = [.. GetFreeSpaceMemory()];
+            List<DefragBlock> listMemory = [.. ArrayUtils.DeepCopyReferenceArray(memory)];
 
             // Iterate back to front to attempt to move file partitions where it is possible to do so
-            for (int i = freeSpaceMemory.Count - 1; i >= 0; --i)
+            for (int i = listMemory.Count - 1; i >= 0; --i)
             {
-                DefragBlock block = freeSpaceMemory[i];
+                DefragBlock block = listMemory[i];
                 if (block.id == -1) continue; // If just free space block, continue
 
                 for (int j = 0; j < i; ++j)
                 {
-                    DefragBlock comparisonBlock = freeSpaceMemory[j];
+                    DefragBlock comparisonBlock = listMemory[j];
                     if (comparisonBlock.id != -1) continue; // If comparison isn't possible free space to insert into, continue
                     if (comparisonBlock.space < block.space) continue; // If comparison free space is too small for block, continue
 
                     int remainingSpace = comparisonBlock.space - block.space;
                     
-                    freeSpaceMemory[j] = block; // Overwrite free space with inserted data
-                    freeSpaceMemory[i] = new(-1, block.space); // Replace inserted data from old position with free space
+                    listMemory[j] = block; // Overwrite free space with inserted data
+                    listMemory[i] = new(-1, block.space); // Replace inserted data from old position with free space
 
                     if(remainingSpace > 0) 
                     {
                         ++i;
-                        freeSpaceMemory.Insert(j + 1, new(-1, remainingSpace)); // Insert remaining space afterwards
+                        listMemory.Insert(j + 1, new(-1, remainingSpace)); // Insert remaining space afterwards
                     }
                     break;
                 }
             }
 
-            return [.. freeSpaceMemory];
+            return [.. listMemory];
         }
-
-
 
         private static long Checksum(DefragBlock[] compactedMemory)
-        {
-            long total = 0;
-            int multiplier = 0;
-
-            foreach (DefragBlock block in compactedMemory)
-            {
-                for (int i = 0; i < block.space; ++i)
-                {
-                    total += block.id * multiplier;
-                    multiplier ++;
-                }
-            }
-            return total;
-        }
-
-
-        private static long Checksum2(DefragBlock[] compactedMemory)
         {
             long total = 0;
             int multiplier = 0;
@@ -176,19 +126,19 @@ namespace _2024.src.Solutions
 
         public string? ExecPartB()
         {
-            return Checksum2(WholeFileDiskCompactor()).ToString();
+            return Checksum(WholeFileDiskCompactor()).ToString();
         }
 
         public void Setup(string[] input, string continuousInput)
         {
-            memory = new Block[(continuousInput.Length + 1) / 2];
+            List<DefragBlock> listMemory = [];
             for (int i = 0; i < continuousInput.Length; i += 2)
             {
-                int size = continuousInput[i] - '0';
-
-                if (i == continuousInput.Length - 1) memory[i / 2] = new(i / 2, size, 0);
-                else memory[i / 2] = new(i / 2, size, continuousInput[i + 1] - '0');
+                listMemory.Add(new(i / 2, continuousInput[i] - '0')); // Add used space to memory
+                if(i != continuousInput.Length - 1) listMemory.Add(new(-1, continuousInput[i + 1] - '0')); // Unless at end, add free space to memory
             }
+
+            memory = [.. listMemory];
         }
     }
 }
