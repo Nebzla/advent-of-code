@@ -19,7 +19,6 @@ namespace _2024.src.Utils
             return (x >= 0 && y >= 0) || (x <= 0 && y <= 0);
         }
 
-
         private static void Permute(char[] symbols, int length, List<string> permutations, string current = "")
         {
             if(current.Length == length) // If full permutation is built, add it as a permutation

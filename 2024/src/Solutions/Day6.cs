@@ -112,7 +112,7 @@ namespace _2024.src.Solutions
             {
                 if (x == xG && y == yG) continue;
 
-                char[,] newGrid = GridUtils.DeepCopyMultiDimensionalArray(grid);
+                char[,] newGrid = ArrayUtils.DeepCopyMultiDimensionalArray(grid);
                 newGrid[x, y] = '#';
                 if (DoesPathLoop(newGrid, xG, yG)) ++total;
             }
