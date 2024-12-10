@@ -119,15 +119,8 @@ namespace _2024.src.Solutions
         }
 
 
-        public string? ExecPartA()
-        {
-            return Checksum(DiskCompactor()).ToString();
-        }
-
-        public string? ExecPartB()
-        {
-            return Checksum(WholeFileDiskCompactor()).ToString();
-        }
+        public string? ExecPartA() => Checksum(DiskCompactor()).ToString();
+        public string? ExecPartB() => Checksum(WholeFileDiskCompactor()).ToString();
 
         public void Setup(string[] input, string continuousInput)
         {

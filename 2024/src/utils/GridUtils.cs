@@ -18,7 +18,26 @@ namespace _2024.src.Utils
             return grid;
         }
 
+        public static int[,] ConvertIntInputToGrid(string[] input)
+        {
+            if (input.Length == 0 || input[0].Length == 0) return new int[0, 0];
+            int[,] grid = new int[input[0].Length, input.Length];
 
+            for (int x = 0; x < input.Length; ++x)
+            {
+                for (int y = 0; y < input[0].Length; ++y)
+                {
+                    char c = input[y][x];
+                    if (!char.IsDigit(c)) grid[x, y] = -1;
+                    else grid[x, y] = c - '0';
+                }
+            }
+
+            return grid;
+        }
+
+
+        // Legacy Utilities, Should use Vector2Int struct from now on for all vector calculations
         public static (int x, int y) GetDirectionVector((int x, int y) pos1, (int x, int y) pos2, int multiplier = 1)
         {
             return ((pos2.x - pos1.x) * multiplier, (pos2.y - pos1.y) * multiplier);
