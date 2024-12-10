@@ -1,6 +1,5 @@
 using _2024.src.Interfaces;
 using _2024.src.Utils;
-using _2024.src.Types;
 
 namespace _2024.src.Solutions
 {
@@ -68,7 +67,6 @@ namespace _2024.src.Solutions
         }
 
         public string? ExecPartA() => GetAntiNodes().Count.ToString();
-
         public string? ExecPartB() => GetResonantAntiNodes().Count.ToString();
 
         public void Setup(string[] input, string continuousInput)

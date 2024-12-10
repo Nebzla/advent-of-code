@@ -1,3 +1,5 @@
+using _2024.src.Types;
+
 namespace _2024.src.Utils
 {
     public static class GridUtils
@@ -34,6 +36,12 @@ namespace _2024.src.Utils
             }
 
             return grid;
+        }
+
+
+        public static bool IsOutOfRange(Vector2Int vect, int xLen, int yLen)
+        {
+            return vect.x < 0 || vect.x >= xLen || vect.y < 0 || vect.y >= yLen;
         }
 
 

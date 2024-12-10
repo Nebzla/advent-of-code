@@ -31,12 +31,13 @@ namespace _2024.src.Utils
 
         public static void PrintAllSolutions()
         {
-            List<ISolution> solutions = Assembly.GetExecutingAssembly()
+            List<ISolution> solutions = [.. Assembly.GetExecutingAssembly()
             .GetTypes()
             .Where(t => typeof(ISolution).IsAssignableFrom(t) && !t.IsInterface)
             .Select(t => Activator.CreateInstance(t) as ISolution)
             .OfType<ISolution>()
-            .ToList();
+            .OrderBy(i => i.DayNumber)];
+            
 
             foreach(ISolution instance in solutions) 
             {
