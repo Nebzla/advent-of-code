@@ -7,10 +7,9 @@ namespace _2024.src.Solutions
     {
         public ushort DayNumber => 11;
 
-        private List<long> initialStones = [];
+        private HashSet<long> initialStones = [];
 
-
-        private static readonly Dictionary<long, long> cachedMultiplications = [];
+        // Causes memory to get full very quickly, inneficient solution left for completeness
         private static void GetNewStones(LinkedList<long> stones)
         {
             LinkedListNode<long>? stone = stones.First;
@@ -45,43 +44,76 @@ namespace _2024.src.Solutions
         }
 
 
-        public string? ExecPartA()
+        private static void AddOrIncrementDict(Dictionary<long, long> dict, long key, long count = 1)
         {
-            LinkedList<long> stones = new(initialStones);
-            for (int i = 0; i < 25; ++i)
-            {
-                GetNewStones(stones);
-            }
-
-            return stones.Count.ToString();
+            if (dict.TryAdd(key, count)) return;
+            dict[key] += count;
         }
-        public string? ExecPartB()
+
+        // left will always be defined, right will be defined if it has split
+        private static readonly Dictionary<long, (long left, long? right)> calculationCache = [];
+
+        private static long GetTotalStones(HashSet<long> stones, ushort blinks)
         {
-            long total = 0;
+            Dictionary<long, long> stoneDict = stones.ToDictionary(stone => stone, c => 1L);
 
-            LinkedList<long> stones = new(initialStones);
-
-            Console.WriteLine(stones.Count);
-
-            foreach (long stone in stones) // Process one stone at a time so memory isnt full
+            for (ushort i = 0; i < blinks; ++i)
             {
-                LinkedList<long> stonesSubList = [];
-                stonesSubList.AddFirst(stone);
-
-                double setupTime = 0;
-                for (int i = 0; i < 75; ++i)
+                Dictionary<long, long> tempDict = [];
+                foreach (KeyValuePair<long, long> stone in stoneDict)
                 {
-                    double currentTime = DiagnosticUtils.Benchmark(() => GetNewStones(stonesSubList), DiagnosticUtils.TimeUnit.Milliseconds);
-                    Console.WriteLine($"Blink {i + 1} complete, took {currentTime}ms");
-                    setupTime += currentTime;
+                    long initialValue = stone.Key;
+                    long initialCount = stone.Value;
+
+                    // If calculation has already been done, get its result instead of performing it again
+                    if (calculationCache.TryGetValue(initialValue, out (long left, long? right) cachedResult))
+                    {
+                        // Add results to dictionary, or increment count if results already exist
+                        AddOrIncrementDict(tempDict, cachedResult.left, initialCount);
+                        if (cachedResult.right != null) AddOrIncrementDict(tempDict, cachedResult.right ?? throw new NullReferenceException(), initialCount);
+                    }
+                    else
+                    {
+                        if (initialValue == 0) // If zero flip to 1
+                        {
+                            AddOrIncrementDict(tempDict, 1, initialCount);
+                            calculationCache.Add(initialValue, (1, null));
+                            continue;
+                        }
+
+                        int digitLength = (int)Math.Log10(initialValue) + 1;
+                        if (digitLength % 2 == 0) // If even digits split into 2
+                        {
+                            long divisor = (long)Math.Pow(10, digitLength / 2);
+                            long leftStone = initialValue / divisor;
+                            long rightStone = initialValue % divisor;
+
+                            AddOrIncrementDict(tempDict, leftStone, initialCount);
+                            AddOrIncrementDict(tempDict, rightStone, initialCount);
+                            calculationCache.Add(initialValue, (leftStone, rightStone));
+                            continue;
+                        }
+
+                        long multipliedVal = initialValue * 2024;
+                        AddOrIncrementDict(tempDict, multipliedVal, initialCount); // Otherwise multiply by 2024
+                        calculationCache.Add(initialValue, (multipliedVal, null));
+                    }
                 }
 
-                Console.WriteLine($"\nNumber {stone} complete, took {setupTime}ms\n");
-                total += stonesSubList.Count;
+                stoneDict = tempDict;
             }
 
-            return total.ToString();
+            long total = 0;
+            foreach(KeyValuePair<long, long> stone in stoneDict) total += stone.Value;
+            return total;
         }
+
+
+        
+
+        public string? ExecPartA() => GetTotalStones(new(initialStones), 25).ToString();
+        public string? ExecPartB() => GetTotalStones(new(initialStones), 75).ToString();
+
         public void Setup(string[] input, string continuousInput)
         {
             initialStones = [.. ParsingUtils.ParseDigits(continuousInput)];

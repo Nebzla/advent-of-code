@@ -12,11 +12,11 @@ namespace _2024.src.Utils
 
             Console.WriteLine($"Executing Day {day} Parts");
             Console.WriteLine("----------------------------------------------");
-            double setupTime = DiagnosticUtils.Benchmark(() => instance.Setup(input, continuousInput), DiagnosticUtils.TimeUnit.Microseconds);
+            decimal setupTime = DiagnosticUtils.Benchmark(() => instance.Setup(input, continuousInput), DiagnosticUtils.TimeUnit.Microseconds);
             Console.WriteLine($"Setup Time: {setupTime / 1000}ms");
 
-            (double timeA, string? resultA) = DiagnosticUtils.Benchmark(instance.ExecPartA, DiagnosticUtils.TimeUnit.Microseconds);
-            (double timeB, string? resultB) = DiagnosticUtils.Benchmark(instance.ExecPartB, DiagnosticUtils.TimeUnit.Microseconds);
+            (decimal timeA, string? resultA) = DiagnosticUtils.Benchmark(instance.ExecPartA, DiagnosticUtils.TimeUnit.Microseconds);
+            (decimal timeB, string? resultB) = DiagnosticUtils.Benchmark(instance.ExecPartB, DiagnosticUtils.TimeUnit.Microseconds);
 
             if(resultA == null && resultB == null) Console.WriteLine("Results returned null, skipping diagnostic");
             else

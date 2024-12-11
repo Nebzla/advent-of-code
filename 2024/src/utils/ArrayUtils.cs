@@ -16,8 +16,6 @@ namespace _2024.src.Utils
             return copy;
         }
         
-
-
         public static T[,] DeepCopyMultiDimensionalArray<T>(T[,] arr)
         {
             int xLen = arr.GetLength(0);
