@@ -4,6 +4,8 @@ namespace _2024.src.Utils
 {
     public static class GridUtils
     {
+        public static readonly Vector2Int[] directions = [new(0, -1), new(1, 0), new(0, 1), new(-1, 0)];
+        
         public static char[,] ConvertInputToGrid(string[] input)
         {
             if (input.Length == 0 || input[0].Length == 0) return new char[0, 0];

@@ -13,13 +13,12 @@ namespace _2024.src.Solutions
         private int xLen;
         private int yLen;
 
-        private static readonly Vector2Int[] directions = [new(0, -1), new(1, 0), new(0, 1), new(-1, 0)];
         private void TraversePath(Vector2Int currentPosition, ref HashSet<Vector2Int> visitedPeaks, ref int pathTotal)
         {
             int currentHeight = grid[currentPosition.x, currentPosition.y];
 
             // Check each direction to see valid hiking trail
-            foreach(Vector2Int direction in directions)
+            foreach(Vector2Int direction in GridUtils.directions)
             {
                 Vector2Int newPos = direction + currentPosition;
                 if(newPos.x >= xLen || newPos.x < 0 || newPos.y >= yLen || newPos.y < 0) continue; // If direction is out of bounds
@@ -41,7 +40,7 @@ namespace _2024.src.Solutions
             int currentHeight = grid[currentPosition.x, currentPosition.y];
 
             // Check each direction to see valid hiking trail
-            foreach(Vector2Int direction in directions)
+            foreach(Vector2Int direction in GridUtils.directions)
             {
                 Vector2Int newPos = direction + currentPosition;
                 if(newPos.x >= xLen || newPos.x < 0 || newPos.y >= yLen || newPos.y < 0) continue; // If direction is out of bounds

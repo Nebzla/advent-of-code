@@ -29,6 +29,8 @@ namespace _2024.src.Types
             double magnitude = Magnitude();
             return new Vector2((float)(x / magnitude), (float)(y / magnitude));
         }
+        
+        public readonly Vector2Int GetPerpendicularVector(bool clockwise = true) => new(clockwise ? y : -y, clockwise ? -x : x);
 
         public readonly double DistanceTo(Vector2Int other)
         {
