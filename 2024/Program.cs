@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using _2024.src.Utils;
+﻿using _2024.src.Utils;
 
 namespace _2024
 {
@@ -7,7 +6,7 @@ namespace _2024
     {
         static void Main()
         {
-            SolutionUtils.PrintSolution(12);
+            SolutionUtils.PrintSolution(13);
         }
     }
 }
