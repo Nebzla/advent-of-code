@@ -31,7 +31,7 @@ namespace _2024.src.Solutions
 
         private DefragBlock[] DiskCompactor()
         {
-            List<DefragBlock> listMemory = [.. ArrayUtils.DeepCopyReferenceArray(memory)];
+            List<DefragBlock> listMemory = [.. ArrayUtils.DeepCopyArray(memory)];
 
             int endMemPtr = GetNewEndPtr(listMemory, listMemory.Count - 1);
             for(int i = 0; i < listMemory.Count - 1; ++i)
@@ -70,7 +70,7 @@ namespace _2024.src.Solutions
 
         private DefragBlock[] WholeFileDiskCompactor()
         {
-            List<DefragBlock> listMemory = [.. ArrayUtils.DeepCopyReferenceArray(memory)];
+            List<DefragBlock> listMemory = [.. ArrayUtils.DeepCopyArray(memory)];
 
             // Iterate back to front to attempt to move file partitions where it is possible to do so
             for (int i = listMemory.Count - 1; i >= 0; --i)

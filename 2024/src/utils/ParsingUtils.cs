@@ -50,7 +50,7 @@ namespace _2024.src.Utils
         }
 
 
-        [GeneratedRegex(@"(\d)+")]
+        [GeneratedRegex(@"([-]?\d+)")]
         private static partial Regex DigitsRegex();
     }
 }

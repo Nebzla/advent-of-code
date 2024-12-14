@@ -4,7 +4,7 @@ namespace _2024.src.Utils
 {
     public static class ArrayUtils
     {
-        public static T[] DeepCopyReferenceArray<T>(T[] arr) where T : IDeepCopyable<T>
+        public static T[] DeepCopyArray<T>(T[] arr) where T : IDeepCopyable<T>
         {
             T[] copy = new T[arr.Length];
 

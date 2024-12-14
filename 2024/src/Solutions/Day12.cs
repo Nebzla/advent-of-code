@@ -8,78 +8,139 @@ namespace _2024.src.Solutions
     {
         public ushort DayNumber => 12;
         private char[,] grid = new char[0, 0];
+        private Region[] regions = [];
         private int xLen;
         private int yLen;
 
         private class Region(char id)
         {
             public readonly char identifier = id;
+            public HashSet<Vector2Int> perimeterNodes = [];
+            public HashSet<Vector2Int> regionNodes = [];
 
-            public int area = 1;
             public int perimeter = 0;
-            public HashSet<HashSet<Vector2Int>> sides = [];
 
-            public int Price => area * perimeter;
+            public int Sides => GetSides(perimeterNodes);
+            public int Area => regionNodes.Count;
+            public int Price => perimeter * Area;
+            public int SidePrice => Sides * Area;
+
+            private static Vector2Int GetRelativeLeftDirection(Vector2Int currentDirection)
+            {
+                int index = Array.IndexOf(Vector2Int.Directions, currentDirection);
+                if (index == -1) throw new ArgumentException("Invalid direction");
+
+                int newIndex = (index - 1 + Vector2Int.Directions.Length) % Vector2Int.Directions.Length;
+                return Vector2Int.Directions[newIndex];
+            }
+
+            private static Vector2Int GetRelativeRightDirection(Vector2Int currentDirection)
+            {
+                int index = Array.IndexOf(Vector2Int.Directions, currentDirection);
+                if (index == -1) throw new ArgumentException("Invalid direction");
+
+                int newIndex = (index + 1) % Vector2Int.Directions.Length;
+                return Vector2Int.Directions[newIndex];
+            }
+
+            private Vector2Int GetInitialDirection(Vector2Int pos, HashSet<Vector2Int> nodes)
+            {
+                foreach (Vector2Int direction in Vector2Int.Directions)
+                {
+                    if (nodes.Contains(pos + direction) && regionNodes.Contains(pos + GetRelativeLeftDirection(direction))) return direction;
+                }
+
+                return Vector2Int.Zero;
+            }
+
+            private int GetSides(HashSet<Vector2Int> nodes)
+            {
+                if (nodes.Count == 1) return 4; // If in isolation, it is automatically known to have 4 corners
+
+                int corners = 0;
+
+                Vector2Int start = nodes.First(); // Get random starting wall node
+                Vector2Int startDirection = GetInitialDirection(start, nodes);
+                Vector2Int currentWallPos = start;
+                Vector2Int currentDirection = startDirection;
+
+                for (int i = 0; startDirection == Vector2Int.Zero; ++i) // If node selected is in isolation, pick another one
+                {
+                    if(i >= nodes.Count) return 4 * nodes.Count;
+                    currentWallPos = nodes.ToList()[i];
+                    startDirection = GetInitialDirection(currentWallPos, nodes);
+                    currentDirection = startDirection;
+                }
+
+                HashSet<Vector2Int> visited = [currentWallPos];
+
+                // Trace around wall as if it was a maze, hugging the left wall at all times unless it loops back on itself
+
+                do
+                {
+                    Vector2Int left = GetRelativeLeftDirection(currentDirection);
+                    if (!regionNodes.Contains(currentWallPos + left)) // If no inside wall to the left
+                    {
+                        // Turn to the left, and move forward as wall should follow along that path
+                        currentDirection = left;
+                        currentWallPos += left;
+                        corners++;
+
+                    }
+                    else if (!regionNodes.Contains(currentWallPos + currentDirection)) // If no inside wall ahead, keep going (no corner)
+                    {
+                        currentWallPos += currentDirection;
+
+                    }
+                    else // Otherwise a backtrack is going to happen
+                    {
+                        // Turn right until on straight path again
+                        currentDirection = GetRelativeRightDirection(currentDirection);
+                        corners++;
+                    }
+
+                    visited.Add(currentWallPos);
+
+                    //! Need to handle case here where it completes a loop at a branch
+                } while (currentWallPos != start || currentDirection != startDirection);
+
+                if (visited.Count < nodes.Count) // If any isolated walls are left over, will need to traverse them
+                {
+                    HashSet<Vector2Int> unvisitedNodes = new(nodes);
+                    unvisitedNodes.SymmetricExceptWith(visited);
+                    corners += GetSides(unvisitedNodes);
+                }
+
+                return corners;
+            }
         }
 
-        // private class SideRegion(char id)
-        // {
-        //     public readonly char identifier = id;
-
-        //     public int area = 1;
-
-        //     public HashSet<Vector2Int> perimeterCoords = [];
-
-        //     public int Sides => GetSides();
-        //     public int Price => area * Sides;
-        //     public int Perimeter => perimeterCoords.Count;
-
-
-        //     private static readonly Vector2Int[] hDirections = [new(1, 0), new(-1, 0)];
-        //     private static readonly Vector2Int[] vDirections = [new(0, 1), new(0, -1)];
-        //     private int GetSides()
-        //     {
-        //         int total = 0;
-
-
-        //         foreach(Vector2Int perimiterStart in perimeterCoords)
-        //         {
-        //             if()
-        //         }
-
-        //         // If it is on a corner between 2 or more region nodes, it needs to that many nodes as edges
-        //         // Can do usual direction check to move along and find edge, 
-        //         // but instead, when at end of a direction, check if at a corner and add the direction to that corner to a temp list
-        //         // list prevents there being more than 4 sides in check
-
-
-
-        //         return total;
-        //     }
-        // }
 
 
         private void FindRegionSize(Region region, Vector2Int pos, HashSet<Vector2Int> explored)
         {
             explored.Add(pos);
-            foreach (Vector2Int direction in GridUtils.directions)
+            region.regionNodes.Add(pos);
+            foreach (Vector2Int direction in Vector2Int.DiagonalDirections)
             {
                 Vector2Int newPos = pos + direction;
-                if (GridUtils.IsOutOfRange(newPos, xLen, yLen)) // If out of grid add permiter and ignore
-                {
-                    region.perimeter++;
-                    continue;
-                }
+
                 if (explored.Contains(newPos)) continue; // If already explored ignore            
 
-                // If going into a new region don't keep travelling that direction and increment permiter (as boundary found)
-                if (grid[newPos.x, newPos.y] != region.identifier)
+
+                // If out of region add permiter and ignore
+                if (GridUtils.IsOutOfRange(newPos, xLen, yLen) || grid[newPos.x, newPos.y] != region.identifier)
                 {
-                    region.perimeter++;
+
+                    region.perimeterNodes.Add(newPos);
+                    if (!direction.IsDiagonal()) region.perimeter++;
+                    continue;
                 }
-                else // Else if in same region still then add to area and explore around that node
+
+                // Else in same region still then add to area and explore around that node
+                if(!direction.IsDiagonal()) // Ensures it not diagonal as could join 2 regions adjacent through a diagonal
                 {
-                    region.area++;
+                    region.regionNodes.Add(newPos);
                     FindRegionSize(region, newPos, explored);
                 }
             }
@@ -97,8 +158,7 @@ namespace _2024.src.Solutions
                     Vector2Int position = new(x, y);
                     if (exploredCoords.Contains(position)) continue;
 
-                    char c = grid[x, y];
-                    Region region = new(c);
+                    Region region = new(grid[x, y]);
 
                     HashSet<Vector2Int> regionExplored = [];
                     FindRegionSize(region, position, regionExplored);
@@ -113,27 +173,32 @@ namespace _2024.src.Solutions
 
         public string? ExecPartA()
         {
-            int totalPrice = 0;
-            Region[] regions = GetRegions();
-
+            int total = 0;
             foreach (Region region in regions)
             {
-                totalPrice += region.Price;
+                total += region.Price;
             }
-
-            return totalPrice.ToString();
+            return total.ToString();
         }
 
         public string? ExecPartB()
         {
-            int totalPrice = 0;
-            return totalPrice.ToString();
+            int total = 0;
+            int i = 0;
+            foreach (Region region in regions)
+            {
+                Console.WriteLine($"{i} / {regions.Length} Complete");
+                total += region.SidePrice;
+                ++i;
+            }
+            return total.ToString();
         }
         public void Setup(string[] input, string continuousInput)
         {
             grid = GridUtils.ConvertInputToGrid(input);
             xLen = grid.GetLength(0);
             yLen = grid.GetLength(1);
+            regions = GetRegions();
         }
     }
 }
