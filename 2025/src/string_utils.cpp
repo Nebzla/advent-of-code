@@ -1,13 +1,15 @@
 #include "string_utils.hpp"
 #include <sstream>
 #include <string>
+#include <vector>
 
+using std::string, std::vector;
 
-std::vector<std::string> splitStringByLines(const std::string& text) {
-    std::vector<std::string> lines;
+vector<string> splitStringByLines(const string& text) {
+    vector<string> lines;
 
     std::stringstream ss(text);
-    std::string line;
+    string line;
 
     while(std::getline(ss, line)) {
         if(!line.empty()) lines.push_back(line);
@@ -16,11 +18,11 @@ std::vector<std::string> splitStringByLines(const std::string& text) {
     return lines;
 }
 
-std::vector<std::string> splitStringByDelimiter(const std::string& text, const char& delimiter) {
-    std::vector<std::string> substrings;
+vector<string> splitStringByDelimiter(const string& text, const char& delimiter) {
+    vector<string> substrings;
 
     std::stringstream ss(text);
-    std::string substr;
+    string substr;
     
     while(getline(ss, substr, delimiter)) {
         substrings.push_back(substr);

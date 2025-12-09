@@ -1,4 +1,5 @@
 #include <fstream>
+#include <iostream>
 #include <memory>
 #include <sstream>
 #include <stdexcept>
@@ -9,7 +10,6 @@
 #include "day_1.hpp"
 #include "day_2.hpp"
 #include "day_3.hpp"
-#include "benchmark.hpp"
 
 std::unordered_map<int, std::unique_ptr<Day>> days;
 
@@ -37,7 +37,7 @@ void execDay(const int& dayNum) {
     if(it == days.end() || !it->second) throw std::runtime_error("Day is not implemented");
 
     std::unique_ptr<Day>& day = it->second;
-    day->outputSolutions(getDayInput(dayNum));
+    day->solve(getDayInput(dayNum));
 }
 
 const int FALLBACK_DAY_EXEC = 3;

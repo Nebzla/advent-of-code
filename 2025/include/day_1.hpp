@@ -3,9 +3,9 @@
 
 class Day1 : public Day {
 public:
-    std::string solvePartA(const std::string& input) override;
-    std::string solvePartB(const std::string& input) override;
+    string solvePartA(const string& input) override;
+    string solvePartB(const string& input) override;
 private:
-    int getActionMovement(const std::string& action);
+    int getActionMovement(const string& action);
 };
 

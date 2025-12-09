@@ -4,19 +4,19 @@
 
 const int DIAL_LENGTH = 100;
 
-int Day1::getActionMovement(const std::string& action) {
+int Day1::getActionMovement(const string& action) {
     char direction = action[0];
     int amount = std::stoi(action.substr(1));
 
     return direction == 'L' ? -amount : amount;
 }
 
-std::string Day1::solvePartA(const std::string& input) {
-    std::vector<std::string> actions = splitStringByLines(input);
+string Day1::solvePartA(const string& input) {
+    vector<string> actions = splitStringByLines(input);
     int dialPosition = 50;
     int zeroCount = 0;
 
-    for (const std::string action : actions) {
+    for (const string action : actions) {
         int movement = getActionMovement(action);
         dialPosition = (dialPosition + movement) % DIAL_LENGTH;
 
@@ -26,12 +26,12 @@ std::string Day1::solvePartA(const std::string& input) {
     return std::to_string(zeroCount);
 }
 
-std::string Day1::solvePartB(const std::string&input) {
-    std::vector<std::string> actions = splitStringByLines(input);
+string Day1::solvePartB(const string&input) {
+    vector<string> actions = splitStringByLines(input);
     int dialPosition = 50;
     int zeroCount = 0;
 
-    for (const std::string action : actions) {
+    for (const string action : actions) {
         int movement = getActionMovement(action);
         int fullCycles = abs(movement) / DIAL_LENGTH;
         int remainingMovement = movement % DIAL_LENGTH;

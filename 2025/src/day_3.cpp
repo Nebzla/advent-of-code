@@ -3,16 +3,15 @@
 #include <cstddef>
 #include <string>
 #include <utility>
-#include <vector>
 
 
-std::vector<std::vector<short>> Day3::parseBatteryBanks(const std::string& input) {
-    std::vector<std::string> lines = splitStringByLines(input);
-    std::vector<std::vector<short>> banks;
+vector<vector<short>> Day3::parseBatteryBanks(const string& input) {
+    vector<string> lines = splitStringByLines(input);
+    vector<vector<short>> banks;
 
 
-    for(const std::string line : lines) {
-        std::vector<short> bank;
+    for(const string line : lines) {
+        vector<short> bank;
 
         for (const char c : line) {
             bank.push_back(c - '0');
@@ -24,7 +23,7 @@ std::vector<std::vector<short>> Day3::parseBatteryBanks(const std::string& input
     return banks;
 }
 
-std::pair<short, size_t> Day3::largestBattery(const std::vector<short>& bank, const size_t& start, const size_t& end) {
+std::pair<short, size_t> Day3::largestBattery(const vector<short>& bank, const size_t& start, const size_t& end) {
     std::pair<short, size_t> largest = std::make_pair(0, -1);
 
     for(size_t i = start; i < end; i++) {
@@ -40,9 +39,9 @@ std::pair<short, size_t> Day3::largestBattery(const std::vector<short>& bank, co
 }
 
 
-std::string Day3::getLargestJoltage(const std::vector<short>& bank, const int batteryCount) {
+string Day3::getLargestJoltage(const vector<short>& bank, const int batteryCount) {
     int lastBatteryIndex = -1;
-    std::string joltage = "";
+    string joltage = "";
 
     for(int b = 0; b < batteryCount; b++) {
         int batteriesLeft = batteryCount - 1 - b;
@@ -57,7 +56,7 @@ std::string Day3::getLargestJoltage(const std::vector<short>& bank, const int ba
 }
 
 
-std::string Day3::solve(const std::string& input, const int& batteries) {
+string Day3::solve(const string& input, const int& batteries) {
     const auto banks = parseBatteryBanks(input);
     long totalJoltage = 0;
 
@@ -71,11 +70,11 @@ std::string Day3::solve(const std::string& input, const int& batteries) {
 
 
 
-// Largest joltage can be found by finding the largest number in the entire std::string, and finding the following largest number past that
-std::string Day3::solvePartA(const std::string& input) {
+// Largest joltage can be found by finding the largest number in the entire string, and finding the following largest number past that
+string Day3::solvePartA(const string& input) {
     return solve(input, 2);
 }
 
-std::string Day3::solvePartB(const std::string& input) {
+string Day3::solvePartB(const string& input) {
     return solve(input, 12);
 }
