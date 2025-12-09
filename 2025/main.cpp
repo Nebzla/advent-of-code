@@ -40,7 +40,7 @@ void execDay(const int& dayNum) {
     day->solve(getDayInput(dayNum));
 }
 
-const int FALLBACK_DAY_EXEC = 3;
+const int FALLBACK_DAY_EXEC = 2;
 
 int main(int argc, char** argv) {
     registerDays();

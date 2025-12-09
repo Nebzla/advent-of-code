@@ -7,9 +7,9 @@ using std::cout, std::endl;
 
 void printResults(const string& identifier, const ResultStr result) {
     cout << identifier << " Solution: " << result.returnValue << "\n\n";
-    cout << "Avg execution time: " << result.average / 1000 << "ms\n";
-    cout << "Quickest iteration: " << result.quickest / 1000 << "ms\n";
-    cout << "Slowest iteration: " << result.slowest / 1000 << "ms\n";
+    cout << "Avg execution time: " << result.average / 1000 << "μs\n";
+    cout << "Quickest iteration: " << result.quickest / 1000 << "μs\n";
+    cout << "Slowest iteration: " << result.slowest / 1000 << "μs\n";
 }
 
 
@@ -18,11 +18,11 @@ void Day::solve(const string &input) {
 
     ResultStr partAResult = benchmark([this, &input] { 
         return this-> solvePartA(input); 
-    }, 10);
+    }, 4);
 
     ResultStr partBResult = benchmark([this, &input] { 
         return this-> solvePartB(input); 
-    }, 10);
+    }, 4);
     
     printResults("Part A", partAResult);
 
