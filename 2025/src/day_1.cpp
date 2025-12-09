@@ -16,7 +16,7 @@ std::string Day1::solvePartA(const std::string& input) {
     int dialPosition = 50;
     int zeroCount = 0;
 
-    for (std::string action : actions) {
+    for (const std::string action : actions) {
         int movement = getActionMovement(action);
         dialPosition = (dialPosition + movement) % DIAL_LENGTH;
 
@@ -31,7 +31,7 @@ std::string Day1::solvePartB(const std::string&input) {
     int dialPosition = 50;
     int zeroCount = 0;
 
-    for (std::string action : actions) {
+    for (const std::string action : actions) {
         int movement = getActionMovement(action);
         int fullCycles = abs(movement) / DIAL_LENGTH;
         int remainingMovement = movement % DIAL_LENGTH;

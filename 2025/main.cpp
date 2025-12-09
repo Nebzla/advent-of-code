@@ -8,6 +8,7 @@
 #include "day.hpp"
 #include "day_1.hpp"
 #include "day_2.hpp"
+#include "day_3.hpp"
 #include "benchmark.hpp"
 
 std::unordered_map<int, std::unique_ptr<Day>> days;
@@ -15,6 +16,7 @@ std::unordered_map<int, std::unique_ptr<Day>> days;
 void registerDays() {
     days[1] = std::make_unique<Day1>();
     days[2] = std::make_unique<Day2>();
+    days[3] = std::make_unique<Day3>();
 }
 
 std::string getDayInput(const int& dayNum) {
@@ -38,7 +40,7 @@ void execDay(const int& dayNum) {
     day->outputSolutions(getDayInput(dayNum));
 }
 
-const int FALLBACK_DAY_EXEC = 2;
+const int FALLBACK_DAY_EXEC = 3;
 
 int main(int argc, char** argv) {
     registerDays();

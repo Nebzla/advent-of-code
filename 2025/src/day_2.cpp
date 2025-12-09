@@ -18,7 +18,7 @@ std::vector<std::pair<long, long>> Day2::parseIDRanges(const std::string& input)
     std::vector<std::pair<long, long>> IDRanges;
     std::vector<std::string> strIDRanges = splitStringByDelimiter(input, ',');
 
-    for (std::string strRange : strIDRanges) {
+    for (const std::string strRange : strIDRanges) {
         std::vector<std::string> values = splitStringByDelimiter(strRange, '-');
         if(values.size() != 2) throw std::length_error("ID range was parsed incorrectly");
 
@@ -50,7 +50,7 @@ std::string Day2::solvePartA(const std::string& input) {
     auto ranges = parseIDRanges(input);
     long IDSum = 0;
     
-    for (auto range : ranges) {
+    for (const auto range : ranges) {
         for (long n = range.first; n <= range.second; n++) {
             if(isInvalidID(n)) IDSum += n;
         }
@@ -63,7 +63,7 @@ std::string Day2::solvePartB(const std::string& input) {
     auto ranges = parseIDRanges(input);
     long IDSum = 0;
     
-    for (auto range : ranges) {
+    for (const auto range : ranges) {
         for (long n = range.first; n <= range.second; n++) {
             if(isInvalidRepeatingID(n)) IDSum += n;
         }
