@@ -1,0 +1,1 @@
+int getDigits(const int& num);

@@ -7,12 +7,14 @@
 
 #include "day.hpp"
 #include "day_1.hpp"
+#include "day_2.hpp"
 #include "benchmark.hpp"
 
 std::unordered_map<int, std::unique_ptr<Day>> days;
 
 void registerDays() {
     days[1] = std::make_unique<Day1>();
+    days[2] = std::make_unique<Day2>();
 }
 
 std::string getDayInput(const int& dayNum) {
@@ -36,21 +38,23 @@ void execDay(const int& dayNum) {
     day->outputSolutions(getDayInput(dayNum));
 }
 
-int main(int argc, char** argv) {
-    // if(argc < 2) throw std::invalid_argument("Missing second argument, must specify a day to test");
+const int FALLBACK_DAY_EXEC = 2;
 
+int main(int argc, char** argv) {
     registerDays();
 
-    // int dayNum;
-    // try { 
-    //     dayNum = std::stoi(argv[1]);
-    // } catch (const std::invalid_argument&) {
-    //     throw std::invalid_argument("Day argument must be an integer");
-    // }
+    int dayNum;
+    if(argc < 2) {
+        dayNum = FALLBACK_DAY_EXEC;
+        std::cout << "No day argument specified, falling back to default day." << std::endl;
+    } else {
+        try { 
+            dayNum = std::stoi(argv[1]);
+        } catch (const std::invalid_argument&) {
+            throw std::invalid_argument("Day argument must be an integer");
+        }
+    }
 
-    // execDay(dayNum);
-
-    execDay(1);
-
+    execDay(dayNum);
     return 0;
 }
