@@ -3,7 +3,6 @@
 #include "math_utils.hpp"
 
 #include <regex>
-#include <stdexcept>
 #include <string>
 
 
@@ -12,20 +11,6 @@
 
 // A sequence can only be invalid if the first half of the sequence equals the second half
 // A sequence cannot possibly be invalid if it has an odd number of digits
-
-vector<std::pair<long, long>> Day2::parseIDRanges(const string& input) {
-    vector<std::pair<long, long>> IDRanges;
-    vector<string> strIDRanges = splitStringByDelimiter(input, ',');
-
-    for (const string strRange : strIDRanges) {
-        vector<string> values = splitStringByDelimiter(strRange, '-');
-        if(values.size() != 2) throw std::length_error("ID range was parsed incorrectly");
-
-        IDRanges.push_back(std::make_pair(stol(values[0]), stol(values[1])));
-    }
-
-    return IDRanges;
-}
 
 bool Day2::isInvalidID(const long& ID) {
     string IDStr = std::to_string(ID);
@@ -43,10 +28,20 @@ bool Day2::isInvalidRepeatingID(const long& ID) {
     return std::regex_match(IDStr, invalidIDRegex);
 }
 
+vector<std::pair<long, long>> Day2::parseInput(const string& input) {
+    vector<std::pair<long, long>> ranges {};
+    vector<string> strRanges = splitStringByDelimiter(input, ',');
+
+    for (const string strRange : strRanges) {
+        ranges.push_back(parseRange(strRange));
+    }
+
+    return ranges;
+}
+
 
 string Day2::solvePartA(const string& input) {
-    
-    auto ranges = parseIDRanges(input);
+    auto ranges = parseInput(input);
     long IDSum = 0;
     
     for (const auto range : ranges) {
@@ -59,7 +54,7 @@ string Day2::solvePartA(const string& input) {
 }
 
 string Day2::solvePartB(const string& input) {
-    auto ranges = parseIDRanges(input);
+    auto ranges = parseInput(input);
     long IDSum = 0;
     
     for (const auto range : ranges) {

@@ -1,5 +1,9 @@
 #include <string>
 #include <vector>
 
-std::vector<std::string> splitStringByLines(const std::string& text);
-std::vector<std::string> splitStringByDelimiter(const std::string& text, const char& delimiter);
+using std::string, std::vector;
+
+vector<string> splitStringByLines(const string& text);
+vector<string> splitStringByDelimiter(const string& text, const char& delimiter);
+std::pair<string, string> splitStringByFirstOccurence(const string& text, const string token);
+std::pair<long, long> parseRange(const string& range);
