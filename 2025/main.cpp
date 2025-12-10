@@ -10,6 +10,7 @@
 #include "day_1.hpp"
 #include "day_2.hpp"
 #include "day_3.hpp"
+#include "day_4.hpp"
 
 std::unordered_map<int, std::unique_ptr<Day>> days;
 
@@ -17,6 +18,7 @@ void registerDays() {
     days[1] = std::make_unique<Day1>();
     days[2] = std::make_unique<Day2>();
     days[3] = std::make_unique<Day3>();
+    days[4] = std::make_unique<Day4>();
 }
 
 std::string getDayInput(const int& dayNum) {
@@ -40,7 +42,7 @@ void execDay(const int& dayNum) {
     day->solve(getDayInput(dayNum));
 }
 
-const int FALLBACK_DAY_EXEC = 2;
+const int FALLBACK_DAY_EXEC = 4;
 
 int main(int argc, char** argv) {
     registerDays();
